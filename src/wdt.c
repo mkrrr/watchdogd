@@ -416,8 +416,10 @@ int wdt_get_bootstatus(void)
 		return 0;
 	}
 
-	if ((err = ioctl(fd, WDIOC_GETBOOTSTATUS, &status)))
-		status += err;
+	if ((err = ioctl(fd, WDIOC_GETBOOTSTATUS, &status))) {
+		DEBUG("Cannot get boot status, assuming no driver support.");
+        return 0;
+    }
 
 	if (!err && status) {
 		if (status & WDIOF_POWERUNDER)
